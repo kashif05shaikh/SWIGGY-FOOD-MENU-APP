@@ -7,7 +7,8 @@
     "namaste",
     "kashif"
   ],
-  "homepage": "https://github.com/kashif05shaikh/NAMASTE-REACT#readme",
+  "homepage":"https://kashif05shaikh.github.io/NAMASTE-REACT"
+,
   "bugs": {
     "url": "https://github.com/kashif05shaikh/NAMASTE-REACT/issues"
   },
@@ -20,10 +21,13 @@
   "type": "module",
   "scripts": {
     "start": "parcel index.html",
-    "build":"parcel build index.html",
-    "test": "jest"
+    "build": "parcel build index.html",
+    "test": "jest",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "parcel": "^2.16.3"
   },
   "dependencies": {
