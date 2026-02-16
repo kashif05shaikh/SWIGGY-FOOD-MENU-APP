@@ -1,40 +1,30 @@
 {
   "name": "namaste-react",
   "version": "1.0.0",
-  "description": "this is my namaste react project",
-  "keywords": [
-    "react",
-    "namaste",
-    "kashif"
-  ],
-  "homepage":"https://kashif05shaikh.github.io/NAMASTE-REACT"
-,
-  "bugs": {
-    "url": "https://github.com/kashif05shaikh/NAMASTE-REACT/issues"
+  "description": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "parcel index.html",
+    "build": "parcel build index.html"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kashif05shaikh/NAMASTE-REACT.git"
+    "url": "git+https://github.com/kashif05shaikh/SWIGGY-FOOD-MENU-APP.git"
   },
+  "keywords": [],
+  "author": "",
   "license": "ISC",
-  "author": "SHAIKH KASHIF",
-  "type": "module",
-  "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html",
-    "test": "jest",
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist"
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kashif05shaikh/SWIGGY-FOOD-MENU-APP/issues"
+  },
+  "homepage": "https://github.com/kashif05shaikh/SWIGGY-FOOD-MENU-APP#readme",
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-router-dom": "^6.30.3"
   },
   "devDependencies": {
-    "gh-pages": "^6.3.0",
-    "parcel": "^2.16.3"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
-  },
-  "browserslist": [
-    "last 2 versions"
-  ]
+    "parcel": "^2.16.4"
+  }
 }

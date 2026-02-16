@@ -1,0 +1,247 @@
+/* ================== GLOBAL ================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background-color: #ffffff;
+  color: #000;
+}
+
+/* ================== HEADER ================== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  border: 3px solid black;
+  border-radius: 10px;
+  width: 100%;
+  background-color: #fff;
+}
+
+.logo {
+  width: 200px;
+  height: 200px;
+}
+
+.nav-items > ul {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  font-size: 25px;
+}
+
+/* ================== SEARCH ================== */
+.search {
+  margin-top: 8px;
+  padding: 10px 20px;
+}
+
+.search input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 1px solid gray;
+  outline: none;
+}
+
+.search input:focus {
+  border-color: black;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+/* ================== FILTER ================== */
+.filter {
+  padding: 0 20px;
+  margin-top: 10px;
+}
+
+.filter-btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  border: 2px solid black;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.filter-btn:hover {
+  cursor: pointer;
+  transform: scale(1.05);
+  box-shadow: 5px 5px 8px gray;
+}
+
+/* ================================================= */
+/* ================= HOME PAGE ===================== */
+/* ===== Restaurant Cards (DO NOT CHANGE UI) ======= */
+/* ================================================= */
+
+.res-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 10px 20px;
+  justify-items: center;
+}
+
+.res-card {
+  width: 300px;
+  min-height: 400px;
+  border: 2px solid black;
+  border-radius: 8px;
+  background-color: #f0f0f0;
+  padding: 10px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.res-card:hover {
+  transform: scale(1.05);
+  box-shadow: 5px 5px 8px gray;
+}
+
+.res-logo {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.res-card h3,
+.res-card h4 {
+  margin: 5px 0;
+  text-align: center;
+}
+
+/* ================== SHIMMER ================== */
+.shimmer-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 10px 20px;
+}
+
+.shimmer-cards {
+  height: 400px;
+  width: 300px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+/* ================================================= */
+/* ================= MENU PAGE ===================== */
+/* ================================================= */
+
+/* Center menu page ONLY */
+.menu {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Restaurant info */
+.menu h1 {
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.menu h3 {
+  text-align: center;
+  margin: 3px 0;
+  color: #555;
+}
+
+/* Menu heading */
+.menu h2 {
+  text-align: center;
+  margin-top: 25px;
+  font-size: 26px;
+}
+
+/* MENU LIST */
+.menu-list {
+  margin-top: 30px;
+}
+
+/* ================= MENU CARD ================= */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 0;
+}
+
+/* LEFT SIDE (TEXT) */
+.menu-left {
+  width: 65%;
+}
+
+.menu-left h3 {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.price {
+  font-weight: bold;
+  margin: 6px 0;
+}
+
+.rating {
+  color: green;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.menu-left p {
+  font-size: 14px;
+  color: #666;
+}
+
+/* RIGHT SIDE (IMAGE) */
+.menu-right {
+  text-align: center;
+}
+
+.menu-right img {
+  width: 130px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Dummy container below image */
+.dummy-box {
+  margin-top: 6px;
+  font-size: 12px;
+  color: gray;
+}
+
+/* ADD button */
+.add-btn {
+  margin-top: 8px;
+  padding: 6px 18px;
+  border-radius: 8px;
+  border: 1px solid green;
+  background-color: white;
+  color: green;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* Divider line */
+.menu-divider {
+  border: none;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* ================= USER CARD ================= */
+.user-card {
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 8px;
+}

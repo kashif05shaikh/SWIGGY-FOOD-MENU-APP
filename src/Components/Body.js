@@ -1,49 +1,86 @@
-import resList from "../utilis/Mock.data.js";
-import RestaurantCard from "./RestaurantCard.js";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import RestaurantCard from "./RestaurantCard";
+import Shimmer from "./Shimmer";
+import "./style.css";
+import { Link } from "react-router-dom";
+import useOnlineStatus from "../utilis/useOnlinestatus";
+
+const API_URL =
+  "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.52110&lng=73.85020&is-seo-homepage-enabled=true";
 
 const Body = () => {
-  const [listOfRestaurants, setListOfRestaurants] = useState(resList);
+  const [listOfRestaurants, setListOfRestaurants] = useState([]);
+  const [filteredRestaurant, setFilteredRestaurant] = useState([]);
+  const [searchText, setSearchText] = useState("");
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const data = await fetch(API_URL);
+      const json = await data.json();
+
+      const restaurants =
+        json?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
+          ?.restaurants || [];
+
+      setListOfRestaurants(restaurants);
+      setFilteredRestaurant(restaurants);
+    } catch (error) {
+      console.error("Error fetching restaurants:", error);
+    }
+  };
+
+  const filterTopRated = () => {
+    const filtered = listOfRestaurants.filter(
+      (res) => Number(res.info.avgRating) > 4.5
+    );
+    setFilteredRestaurant(filtered);
+  };
+  const onlineStatus = useOnlineStatus();
+  if (!onlineStatus)
+  return <h1>Please check your internet connection!</h1>;
+
+  if (listOfRestaurants.length === 0) return <Shimmer />;
 
   return (
     <div className="body">
-      {/* FILTER */}
       <div className="filter">
-        <button
-          className="filter-btn"
-          onClick={() => {
-            const filteredList = listOfRestaurants.filter(
-              (res) => res.data.avgRating > 4
-            );
-            setListOfRestaurants(filteredList);
-          }}
-        >
-        TOP RATED RESTAURANTS
+        <button className="filter-btn" onClick={filterTopRated}>
+          TOP RATED RESTAURANTS
         </button>
       </div>
 
-      {/* SEARCH (UI only for now) */}
       <div className="search">
         <input
           type="text"
-          placeholder="Search restaurants or cuisines..."
-          style={{
-            width: "100%",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "5px",
-            border: "1px solid gray",
-          }}
+          className="search-box"
+          value={searchText}
+          placeholder="Search restaurants..."
+          onChange={(e) => setSearchText(e.target.value)}
         />
+        <button
+          onClick={() => {
+            const filtered = listOfRestaurants.filter((res) =>
+              res.info.name.toLowerCase().includes(searchText.toLowerCase())
+            );
+            setFilteredRestaurant(filtered);
+          }}
+        >
+          Search
+        </button>
       </div>
 
-      {/* RESTAURANTS */}
       <div className="res-container">
-        {listOfRestaurants.map((restaurant) => (
-          <RestaurantCard
-            key={restaurant.data.id}   // ✅ unique key
-            resData={restaurant.data}  // ✅ pass inner data object
-          />
+        {filteredRestaurant.map((restaurant) => (
+          <Link
+            key={restaurant.info.id}
+            to={"/restaurants/" + restaurant.info.id}
+          >
+            <RestaurantCard resData={restaurant.info} />
+          </Link>
         ))}
       </div>
     </div>
