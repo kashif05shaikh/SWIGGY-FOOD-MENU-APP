@@ -7,7 +7,7 @@ const MenuItemCard = ({ item }) => {
     price,
     defaultPrice,
     imageId,
-    ratings
+    ratings,
   } = item.card.info;
 
   return (
@@ -21,8 +21,7 @@ const MenuItemCard = ({ item }) => {
           </p>
           {ratings?.aggregatedRating?.rating && (
             <p className="rating">
-              ⭐ {ratings.aggregatedRating.rating}
-              {" "}
+              ⭐ {ratings.aggregatedRating.rating}{" "}
               ({ratings.aggregatedRating.ratingCountV2})
             </p>
           )}
@@ -38,9 +37,7 @@ const MenuItemCard = ({ item }) => {
             alt={name}
           />
           {/* DUMMY CONTAINER BELOW IMAGE */}
-          <div className="dummy-box">
-            Customisable
-          </div>
+          <div className="dummy-box">Customisable</div>
         </div>
       </div>
       {/* DIVIDER LINE */}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import RestaurantCard from "./RestaurantCard";
-import Shimmer from "./Shimmer";
+import Shimmer from "./shimmer";
 import "./style.css";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utilis/useOnlinestatus";
@@ -39,9 +39,10 @@ const Body = () => {
     );
     setFilteredRestaurant(filtered);
   };
+
   const onlineStatus = useOnlineStatus();
   if (!onlineStatus)
-  return <h1>Please check your internet connection!</h1>;
+    return <h1>Please check your internet connection!</h1>;
 
   if (listOfRestaurants.length === 0) return <Shimmer />;
 
