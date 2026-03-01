@@ -20,8 +20,10 @@
   },
   "homepage": "https://github.com/kashif05shaikh/SWIGGY-FOOD-MENU-APP#readme",
   "dependencies": {
+    "@reduxjs/toolkit": "^2.11.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^6.30.3"
   },
   "devDependencies": {

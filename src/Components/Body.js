@@ -1,19 +1,21 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./shimmer";
 import "./style.css";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utilis/useOnlinestatus";
+import UserContext from "./UserContext";
 
 const API_URL =
-  "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.52110&lng=73.85020&is-seo-homepage-enabled=true";
+  "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.9690247&lng=72.8205292&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurant, setFilteredRestaurant] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-  console.log("body render",listOfRestaurants)
+  const { loggedinUser, setLoggedinUser } = useContext(UserContext);
+
   useEffect(() => {
     fetchData();
   }, []);
@@ -42,8 +44,7 @@ const Body = () => {
   };
 
   const onlineStatus = useOnlineStatus();
-  if (!onlineStatus)
-    return <h1>Please check your internet connection!</h1>;
+  if (!onlineStatus) return <h1>Please check your internet connection!</h1>;
 
   if (listOfRestaurants.length === 0) return <Shimmer />;
 
@@ -73,6 +74,18 @@ const Body = () => {
         >
           Search
         </button>
+      </div>
+
+      <div className="username-wrapper">
+        <span className="username-icon">👤</span>
+        <div className="username-field-group">
+          <span className="username-label">USERNAME</span>
+          <input
+            value={loggedinUser}
+            onChange={(e) => setLoggedinUser(e.target.value)}
+            placeholder="Enter your name..."
+          />
+        </div>
       </div>
 
       <div className="res-container">
