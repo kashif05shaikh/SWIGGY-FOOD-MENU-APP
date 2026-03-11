@@ -8,10 +8,12 @@ import Contact from "../Components/Contact.js";
 import Error from "../Components/Error.js";
 import RestaurantMenu from "../Components/RestaurantMenu.js";
 import Cart from "../Components/cart.js";
+import Checkout from "../Components/Checkout.js";
 import { lazy, Suspense } from "react";
 import UserContext from "../Components/UserContext.js";
 import { Provider } from "react-redux";
 import appStore from "./appStore.js";
+import { DarkModeProvider } from "../Components/DarkModeContext.js"; // ← exact case
 
 const Grocery = lazy(() => import("../Components/grocery.js"));
 
@@ -24,7 +26,9 @@ const AppLayout = () => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ loggedinUser: userInfo, setLoggedinUser: setUserInfo }}>
+    <UserContext.Provider
+      value={{ loggedinUser: userInfo, setLoggedinUser: setUserInfo }}
+    >
       <div className="app">
         <Header />
         <Outlet />
@@ -39,9 +43,9 @@ const appRouter = createBrowserRouter(
       path: "/",
       element: <AppLayout />,
       children: [
-        { path: "/", element: <Body /> },
-        { path: "/about", element: <About /> },
-        { path: "/contact", element: <Contact /> },
+        { path: "/",                   element: <Body /> },
+        { path: "/about",              element: <About /> },
+        { path: "/contact",            element: <Contact /> },
         {
           path: "/grocery",
           element: (
@@ -50,23 +54,24 @@ const appRouter = createBrowserRouter(
             </Suspense>
           ),
         },
-        { path: "/cart", element: <Cart /> },  // ✅ make sure this is exactly "/cart"
+        { path: "/cart",               element: <Cart /> },
+        { path: "/checkout",           element: <Checkout /> },
         { path: "/restaurants/:resId", element: <RestaurantMenu /> },
       ],
       errorElement: <Error />,
     },
   ],
   {
-    future: {
-      v7_startTransition: true,  // ✅ suppresses the React Router warning
-    },
+    future: { v7_startTransition: true },
   }
 );
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
-  <Provider store={appStore}>   {/* ✅ Provider outside router so store never resets */}
-    <RouterProvider router={appRouter} />
+  <Provider store={appStore}>
+    <DarkModeProvider>
+      <RouterProvider router={appRouter} />
+    </DarkModeProvider>
   </Provider>
 );

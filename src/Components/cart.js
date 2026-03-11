@@ -1,122 +1,167 @@
 import { useSelector, useDispatch } from "react-redux";
-import { removeItem, clearcart } from "../utilis/cartslice";
+import { removeItem, clearcart, addItem } from "../utilis/cartslice";
+import { useNavigate } from "react-router-dom";
+import { useDarkMode } from "./DarkModeContext"; 
 
 const CDN_URL =
   "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/";
 
 const Cart = () => {
   const cartItems = useSelector((store) => store.cart.items);
-  const dispatch = useDispatch();
+  const dispatch  = useDispatch();
+  const navigate  = useNavigate();
+  const { isDark } = useDarkMode();
+
+  // group duplicate items to show quantity
+  const grouped = cartItems.reduce((acc, item) => {
+    const key = item.name;
+    if (!acc[key]) acc[key] = { ...item, qty: 1 };
+    else acc[key].qty += 1;
+    return acc;
+  }, {});
+  const groupedItems = Object.values(grouped);
+
+  const subtotal = cartItems.reduce((a, i) => a + (i?.price || i?.defaultPrice || 0) / 100, 0);
+  const gst      = +(subtotal * 0.05).toFixed(2);
+  const toPay    = +(subtotal * 1.05).toFixed(2);
+
+  const handleRemoveOne = (item) => {
+    const idx = cartItems.findLastIndex(i => i.name === item.name);
+    dispatch(removeItem(idx));
+  };
+
+  const handleAddOne = (item) => {
+    dispatch(addItem(item));
+  };
 
   return (
-    <div className="cart-container">
+    <div className={`cart-page ${isDark ? "dark" : ""}`}>
 
-      {/* HEADER */}
-      <div className="cart-header">
-        <h1 className="cart-title">
-          🛒 Your Cart
-          <span>({cartItems.length} {cartItems.length === 1 ? "item" : "items"})</span>
-        </h1>
-        {cartItems.length > 0 && (
-          <button className="cart-clear-btn" onClick={() => dispatch(clearcart())}>
-            Clear Cart
-          </button>
-        )}
-      </div>
-
-      {/* EMPTY STATE */}
+      {/* ── EMPTY STATE ── */}
       {cartItems.length === 0 ? (
-        <div className="cart-empty">
-          <div className="cart-empty-icon">🍽️</div>
+        <div className="cart-empty-state">
+          <div className="empty-emoji">🛒</div>
           <h2>Your cart is empty</h2>
-          <p>Add items from a restaurant to get started!</p>
+          <p>Add delicious items from a restaurant!</p>
+          <button className="back-home-btn" onClick={() => navigate("/")}>
+            Browse Restaurants →
+          </button>
         </div>
       ) : (
-        <>
-          {/* CART ITEMS */}
-          <div className="cart-items-box">
-            {cartItems.map((item, index) => (
-              <div className="cart-item-row" key={index}>
+        <div className="cart-layout">
 
-                {/* LEFT — name, price, rating */}
-                <div className="cart-item-left">
-                  <p className="cart-item-name">{item?.name || "Unknown Item"}</p>
-                  <p className="cart-item-price">
-                    ₹{((item?.price || item?.defaultPrice || 0) / 100).toFixed(2)}
-                  </p>
-                  {item?.ratings?.aggregatedRating?.rating && (
-                    <p className="cart-item-rating">
-                      ⭐ {item.ratings.aggregatedRating.rating}{" "}
-                      ({item.ratings.aggregatedRating.ratingCountV2})
-                    </p>
-                  )}
-                </div>
+          {/* ══ LEFT: items list ══ */}
+          <div className="cart-left">
+            <div className="cart-left-header">
+              <h1 className="cart-heading">
+                🛒 Your Cart
+                <span className="cart-count">({cartItems.length} items)</span>
+              </h1>
+              <button className="clear-btn" onClick={() => dispatch(clearcart())}>
+                🗑 Clear All
+              </button>
+            </div>
 
-                {/* RIGHT — image + remove button side by side */}
-                <div className="cart-item-right">
+            <div className="cart-items-list">
+              {groupedItems.map((item, i) => (
+                <div className="cart-card" key={i}>
                   <img
-                    className="cart-item-img"
+                    className="cart-card-img"
                     src={
                       item?.imageId
                         ? CDN_URL + item.imageId
-                        : "https://via.placeholder.com/100"
+                        : "https://via.placeholder.com/90"
                     }
                     alt={item?.name}
                   />
-                  <button
-                    className="cart-remove-btn"
-                    onClick={() => dispatch(removeItem(index))}
-                  >
-                    REMOVE −
-                  </button>
+                  <div className="cart-card-info">
+                    <p className="cart-card-name">{item?.name}</p>
+                    {item?.ratings?.aggregatedRating?.rating && (
+                      <p className="cart-card-rating">
+                        ⭐ {item.ratings.aggregatedRating.rating}
+                      </p>
+                    )}
+                    <p className="cart-card-price">
+                      ₹{((item?.price || item?.defaultPrice || 0) / 100).toFixed(2)} × {item.qty}
+                    </p>
+                  </div>
+
+                  {/* quantity controls */}
+                  <div className="cart-qty-controls">
+                    <button className="qty-btn minus" onClick={() => handleRemoveOne(item)}>−</button>
+                    <span className="qty-num">{item.qty}</span>
+                    <button className="qty-btn plus" onClick={() => handleAddOne(item)}>+</button>
+                  </div>
+
+                  <p className="cart-card-total">
+                    ₹{(((item?.price || item?.defaultPrice || 0) / 100) * item.qty).toFixed(2)}
+                  </p>
                 </div>
+              ))}
+            </div>
 
+            {/* promo code */}
+            <div className="promo-box">
+              <span className="promo-icon">🏷</span>
+              <input className="promo-input" placeholder="Enter promo code" />
+              <button className="promo-apply">APPLY</button>
+            </div>
+          </div>
+
+          {/* ══ RIGHT: bill summary + pay ══ */}
+          <div className="cart-right">
+            <div className="bill-card">
+              <h3 className="bill-card-title">Bill Details</h3>
+
+              <div className="bill-line">
+                <span>Item Total</span>
+                <span>₹{subtotal.toFixed(2)}</span>
               </div>
-            ))}
+              <div className="bill-line">
+                <span>Delivery Fee</span>
+                <span className="free-tag">FREE</span>
+              </div>
+              <div className="bill-line">
+                <span>GST & Charges</span>
+                <span>₹{gst}</span>
+              </div>
+              <div className="bill-line savings">
+                <span>🎉 Total Savings</span>
+                <span className="savings-val">−₹{(subtotal * 0.1).toFixed(2)}</span>
+              </div>
+
+              <div className="bill-divider" />
+
+              <div className="bill-total-line">
+                <span>TO PAY</span>
+                <span>₹{toPay.toFixed(2)}</span>
+              </div>
+
+              <button className="pay-btn" onClick={() => navigate("/checkout")}>
+                <span>Proceed to Pay</span>
+                <span className="pay-amt">₹{toPay.toFixed(2)}</span>
+              </button>
+
+              <p className="safe-tag">🔒 100% Secure Payments</p>
+
+              <div className="pay-icons">
+                {["GPay", "PhonePe", "Paytm", "UPI", "Card"].map(p => (
+                  <span key={p} className="pay-icon-chip">{p}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* delivery info */}
+            <div className="delivery-card">
+              <span className="delivery-icon">🛵</span>
+              <div>
+                <p className="delivery-title">Estimated Delivery</p>
+                <p className="delivery-time">30 – 40 minutes</p>
+              </div>
+            </div>
           </div>
 
-          {/* BILL SUMMARY */}
-          <div className="bill-box">
-            <h2 className="bill-title">Bill Summary</h2>
-
-            <div className="bill-row">
-              <span className="bill-label">Item Total</span>
-              <span className="bill-value">
-                ₹{cartItems
-                  .reduce((acc, item) => acc + (item?.price || item?.defaultPrice || 0) / 100, 0)
-                  .toFixed(2)}
-              </span>
-            </div>
-
-            <div className="bill-row">
-              <span className="bill-label">Delivery Fee</span>
-              <span className="bill-value free">FREE</span>
-            </div>
-
-            <div className="bill-row">
-              <span className="bill-label">GST & Charges (5%)</span>
-              <span className="bill-value">
-                ₹{(cartItems
-                  .reduce((acc, item) => acc + (item?.price || item?.defaultPrice || 0) / 100, 0) * 0.05)
-                  .toFixed(2)}
-              </span>
-            </div>
-
-            <div className="bill-total-row">
-              <span className="bill-total-label">TO PAY</span>
-              <span className="bill-total-value">
-                ₹{(cartItems
-                  .reduce((acc, item) => acc + (item?.price || item?.defaultPrice || 0) / 100, 0) * 1.05)
-                  .toFixed(2)}
-              </span>
-            </div>
-          </div>
-
-          {/* PLACE ORDER */}
-          <button className="place-order-btn">
-            Proceed to Pay 🍴
-          </button>
-        </>
+        </div>
       )}
     </div>
   );
