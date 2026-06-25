@@ -10,14 +10,11 @@ const useRestaurantMenu = (resId) => {
 
   const fetchData = async () => {
     try {
-      const data = await fetch(MENU_API + resId, {
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      });
+      const data = await fetch(MENU_API + resId);
+      if (!data.ok) {
+        throw new Error(`Menu API failed with ${data.status}`);
+      }
       const json = await data.json();
-      console.log("Menu API response:", json); // debug
       setResInfo(json?.data);
     } catch (error) {
       console.warn("Error fetching restaurant menu:", error);

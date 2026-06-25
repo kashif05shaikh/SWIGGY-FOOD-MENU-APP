@@ -3,8 +3,10 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "parcel index.html",
-    "build": "parcel build index.html --dist-dir .parcel-dist",
+    "start": "node scripts/dev.js",
+    "parcel": "parcel index.html",
+    "proxy": "node scripts/dev.js --proxy-only",
+    "build": "parcel build index.html --dist-dir .parcel-dist --no-cache",
     "test": "jest"
   },
   "repository": {

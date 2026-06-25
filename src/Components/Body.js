@@ -5,7 +5,20 @@ import "./style.css";
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utilis/useOnlinestatus";
 import UserContext from "./UserContext";
-import { RESTAURANT_API } from "../utilis/constant"; // ✅ import from constants
+import { RESTAURANT_API } from "../utilis/constant";
+
+const findRestaurants = (cards = []) => {
+  for (const card of cards) {
+    const restaurants =
+      card?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+
+    if (Array.isArray(restaurants) && restaurants.length > 0) {
+      return restaurants;
+    }
+  }
+
+  return [];
+};
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -20,15 +33,13 @@ const Body = () => {
 
   const fetchData = async () => {
     try {
-      const data = await fetch(RESTAURANT_API); // ✅ uses constant
+      const data = await fetch(RESTAURANT_API);
+      if (!data.ok) {
+        throw new Error(`Restaurant API failed with ${data.status}`);
+      }
       const json = await data.json();
 
-      const restaurants =
-        json?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle
-          ?.restaurants ||
-        json?.data?.cards?.[2]?.card?.card?.gridElements?.infoWithStyle
-          ?.restaurants ||
-        [];
+      const restaurants = findRestaurants(json?.data?.cards);
 
       setListOfRestaurants(restaurants);
       setFilteredRestaurant(restaurants);

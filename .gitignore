@@ -4,3 +4,4 @@ dist
 .parcel-dist
 .parcel-tmp
 dist-test
+babel.config.js
