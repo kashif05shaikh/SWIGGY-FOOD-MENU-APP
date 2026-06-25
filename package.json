@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "node scripts/dev.js",
+    "server": "node server.js",
     "parcel": "parcel index.html",
     "proxy": "node scripts/dev.js --proxy-only",
     "build": "parcel build index.html --dist-dir .parcel-dist --no-cache",

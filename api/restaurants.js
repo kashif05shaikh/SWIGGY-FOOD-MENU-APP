@@ -1,5 +1,7 @@
+const fallbackRestaurantPayload = require("../data/fallbackRestaurants");
+
 const LIST_URL =
-  "https://www.swiggy.com/mapi/restaurants/list/v5?offset=0&is-seo-homepage-enabled=true&carousel=true&third_party_vendor=1";
+  "https://www.swiggy.com/dapi/restaurants/list/v5?is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
 
 const headers = {
   "User-Agent":
@@ -7,6 +9,7 @@ const headers = {
   Accept: "application/json,text/plain,*/*",
   Referer: "https://www.swiggy.com/",
   Origin: "https://www.swiggy.com",
+  "X-Requested-With": "XMLHttpRequest",
 };
 
 module.exports = async (req, res) => {
@@ -17,8 +20,15 @@ module.exports = async (req, res) => {
   try {
     const response = await fetch(targetUrl, { headers });
     const body = await response.text();
+    const contentType = response.headers.get("content-type") || "";
 
     res.setHeader("Content-Type", "application/json");
+
+    if (!contentType.includes("application/json")) {
+      res.status(200).json(fallbackRestaurantPayload);
+      return;
+    }
+
     res.status(response.status).send(body);
   } catch (error) {
     res.status(502).json({ error: error.message });

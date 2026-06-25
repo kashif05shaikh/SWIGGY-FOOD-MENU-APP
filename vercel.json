@@ -1,7 +1,16 @@
 {
+  "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": ".parcel-dist",
   "routes": [
+    {
+      "src": "/api/restaurants",
+      "dest": "/api/restaurants.js"
+    },
+    {
+      "src": "/api/menu",
+      "dest": "/api/menu.js"
+    },
     {
       "handle": "filesystem"
     },

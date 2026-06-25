@@ -7,9 +7,13 @@ export const LOGO_URL =
 const isLocalhost =
   typeof window !== "undefined" && window.location.hostname === "localhost";
 
-export const API_BASE_URL = isLocalhost
-  ? "http://localhost:3001/api"
-  : "/api";
+const deployedApiBaseUrl =
+  typeof process !== "undefined" && process.env
+    ? process.env.API_BASE_URL
+    : "";
+
+export const API_BASE_URL =
+  deployedApiBaseUrl || (isLocalhost ? "http://localhost:3001/api" : "/api");
 
 export const RESTAURANT_API =
   `${API_BASE_URL}/restaurants?lat=19.07480&lng=72.88560`;
